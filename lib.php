@@ -19,7 +19,7 @@
  *
  * This plugin synchronises enrolment and roles with a LDAP server.
  *
- * @package    enrol_ldap
+ * @package    enrol_ldapgroup
  * @author     Iñaki Arenaza - based on code by Martin Dougiamas, Martin Langhoff and others
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @copyright  2010 Iñaki Arenaza <iarenaza@eps.mondragon.edu>
@@ -28,9 +28,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class enrol_ldap_plugin extends enrol_plugin {
+class enrol_ldapgroup_plugin extends enrol_plugin {
     protected $enrol_localcoursefield = 'idnumber';
-    protected $enroltype = 'enrol_ldap';
+    protected $enroltype = 'enrol_ldapgroup';
     protected $errorlogtag = '[ENROL LDAP] ';
 
     /**
@@ -160,7 +160,7 @@ class enrol_ldap_plugin extends enrol_plugin {
             // Get the list of current user enrolments that come from LDAP
             $sql= "SELECT e.courseid, ue.status, e.id as enrolid, c.shortname
                      FROM {user} u
-                     JOIN {role_assignments} ra ON (ra.userid = u.id AND ra.component = 'enrol_ldap' AND ra.roleid = :roleid)
+                     JOIN {role_assignments} ra ON (ra.userid = u.id AND ra.component = 'enrol_ldapgroup' AND ra.roleid = :roleid)
                      JOIN {user_enrolments} ue ON (ue.userid = u.id AND ue.enrolid = ra.itemid)
                      JOIN {enrol} e ON (e.id = ue.enrolid)
                      JOIN {course} c ON (c.id = e.courseid)
@@ -175,7 +175,7 @@ class enrol_ldap_plugin extends enrol_plugin {
             foreach ($enrolments[$role->id]['ext'] as $enrol) {
                 $course_ext_id = $enrol[$courseidnumber][0];
                 if (empty($course_ext_id)) {
-                    $trace->output(get_string('extcourseidinvalid', 'enrol_ldap'));
+                    $trace->output(get_string('extcourseidinvalid', 'enrol_ldapgroup'));
                     continue; // Next; skip this one!
                 }
 
@@ -183,13 +183,13 @@ class enrol_ldap_plugin extends enrol_plugin {
                 $course = $DB->get_record('course', array($this->enrol_localcoursefield=>$course_ext_id));
                 if (empty($course)) { // Course doesn't exist
                     if ($this->get_config('autocreate')) { // Autocreate
-                        $trace->output(get_string('createcourseextid', 'enrol_ldap', array('courseextid'=>$course_ext_id)));
+                        $trace->output(get_string('createcourseextid', 'enrol_ldapgroup', array('courseextid'=>$course_ext_id)));
                         if (!$newcourseid = $this->create_course($enrol, $trace)) {
                             continue;
                         }
                         $course = $DB->get_record('course', array('id'=>$newcourseid));
                     } else {
-                        $trace->output(get_string('createnotcourseextid', 'enrol_ldap', array('courseextid'=>$course_ext_id)));
+                        $trace->output(get_string('createnotcourseextid', 'enrol_ldapgroup', array('courseextid'=>$course_ext_id)));
                         continue; // Next; skip this one!
                     }
                 }
@@ -226,7 +226,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                     // set it back to active on external re-enrolment. So set it
                     // unconditionnally to cover both cases.
                     $DB->set_field('user_enrolments', 'status', ENROL_USER_ACTIVE, array('enrolid'=>$instance->id, 'userid'=>$user->id));
-                    $trace->output(get_string('enroluser', 'enrol_ldap',
+                    $trace->output(get_string('enroluser', 'enrol_ldapgroup',
                         array('user_username'=> $user->username,
                               'course_shortname'=>$course->shortname,
                               'course_id'=>$course->id)));
@@ -234,7 +234,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                     if ($enrolments[$role->id]['current'][$course->id]->status == ENROL_USER_SUSPENDED) {
                         // Reenable enrolment that was previously disabled. Enrolment refreshed
                         $DB->set_field('user_enrolments', 'status', ENROL_USER_ACTIVE, array('enrolid'=>$instance->id, 'userid'=>$user->id));
-                        $trace->output(get_string('enroluserenable', 'enrol_ldap',
+                        $trace->output(get_string('enroluserenable', 'enrol_ldapgroup',
                             array('user_username'=> $user->username,
                                   'course_shortname'=>$course->shortname,
                                   'course_id'=>$course->id)));
@@ -255,7 +255,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                 switch ($this->get_config('unenrolaction')) {
                     case ENROL_EXT_REMOVED_UNENROL:
                         $this->unenrol_user($instance, $user->id);
-                        $trace->output(get_string('extremovedunenrol', 'enrol_ldap',
+                        $trace->output(get_string('extremovedunenrol', 'enrol_ldapgroup',
                             array('user_username'=> $user->username,
                                   'course_shortname'=>$course->shortname,
                                   'course_id'=>$course->courseid)));
@@ -266,7 +266,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                     case ENROL_EXT_REMOVED_SUSPEND:
                         if ($course->status != ENROL_USER_SUSPENDED) {
                             $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, array('enrolid'=>$instance->id, 'userid'=>$user->id));
-                            $trace->output(get_string('extremovedsuspend', 'enrol_ldap',
+                            $trace->output(get_string('extremovedsuspend', 'enrol_ldapgroup',
                                 array('user_username'=> $user->username,
                                       'course_shortname'=>$course->shortname,
                                       'course_id'=>$course->courseid)));
@@ -276,8 +276,8 @@ class enrol_ldap_plugin extends enrol_plugin {
                         if ($course->status != ENROL_USER_SUSPENDED) {
                             $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, array('enrolid'=>$instance->id, 'userid'=>$user->id));
                         }
-                        role_unassign_all(array('contextid'=>$context->id, 'userid'=>$user->id, 'component'=>'enrol_ldap', 'itemid'=>$instance->id));
-                        $trace->output(get_string('extremovedsuspendnoroles', 'enrol_ldap',
+                        role_unassign_all(array('contextid'=>$context->id, 'userid'=>$user->id, 'component'=>'enrol_ldapgroup', 'itemid'=>$instance->id));
+                        $trace->output(get_string('extremovedsuspendnoroles', 'enrol_ldapgroup',
                             array('user_username'=> $user->username,
                                   'course_shortname'=>$course->shortname,
                                   'course_id'=>$course->courseid)));
@@ -415,19 +415,19 @@ class enrol_ldap_plugin extends enrol_plugin {
                     foreach($flat_records as $course) {
                         $course = array_change_key_case($course, CASE_LOWER);
                         $idnumber = $course{$this->config->course_idnumber}[0];
-                        $trace->output(get_string('synccourserole', 'enrol_ldap', array('idnumber'=>$idnumber, 'role_shortname'=>$role->shortname)));
+                        $trace->output(get_string('synccourserole', 'enrol_ldapgroup', array('idnumber'=>$idnumber, 'role_shortname'=>$role->shortname)));
 
                         // Does the course exist in moodle already?
                         $course_obj = $DB->get_record('course', array($this->enrol_localcoursefield=>$idnumber));
                         if (empty($course_obj)) { // Course doesn't exist
                             if ($this->get_config('autocreate')) { // Autocreate
-                                $trace->output(get_string('createcourseextid', 'enrol_ldap', array('courseextid'=>$idnumber)));
+                                $trace->output(get_string('createcourseextid', 'enrol_ldapgroup', array('courseextid'=>$idnumber)));
                                 if (!$newcourseid = $this->create_course($course, $trace)) {
                                     continue;
                                 }
                                 $course_obj = $DB->get_record('course', array('id'=>$newcourseid));
                             } else {
-                                $trace->output(get_string('createnotcourseextid', 'enrol_ldap', array('courseextid'=>$idnumber)));
+                                $trace->output(get_string('createnotcourseextid', 'enrol_ldapgroup', array('courseextid'=>$idnumber)));
                                 continue; // Next; skip this one!
                             }
                         } else {  // Check if course needs update & update as needed.
@@ -486,7 +486,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                         $sql= "SELECT u.id as userid, u.username, ue.status,
                                       ra.contextid, ra.itemid as instanceid
                                  FROM {user} u
-                                 JOIN {role_assignments} ra ON (ra.userid = u.id AND ra.component = 'enrol_ldap' AND ra.roleid = :roleid)
+                                 JOIN {role_assignments} ra ON (ra.userid = u.id AND ra.component = 'enrol_ldapgroup' AND ra.roleid = :roleid)
                                  JOIN {user_enrolments} ue ON (ue.userid = u.id AND ue.enrolid = ra.itemid)
                                  JOIN {enrol} e ON (e.id = ue.enrolid)
                                 WHERE u.deleted = 0 AND e.courseid = :courseid ";
@@ -499,7 +499,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                             unset($params2);
                         } else {
                             $shortname = format_string($course_obj->shortname, true, array('context' => $context));
-                            $trace->output(get_string('emptyenrolment', 'enrol_ldap',
+                            $trace->output(get_string('emptyenrolment', 'enrol_ldapgroup',
                                          array('role_shortname'=> $role->shortname,
                                                'course_shortname' => $shortname)));
                         }
@@ -512,7 +512,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                                 switch ($this->get_config('unenrolaction')) {
                                 case ENROL_EXT_REMOVED_UNENROL:
                                     $this->unenrol_user($instance, $row->userid);
-                                    $trace->output(get_string('extremovedunenrol', 'enrol_ldap',
+                                    $trace->output(get_string('extremovedunenrol', 'enrol_ldapgroup',
                                         array('user_username'=> $row->username,
                                               'course_shortname'=>$course_obj->shortname,
                                               'course_id'=>$course_obj->id)));
@@ -523,7 +523,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                                 case ENROL_EXT_REMOVED_SUSPEND:
                                     if ($row->status != ENROL_USER_SUSPENDED) {
                                         $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, array('enrolid'=>$instance->id, 'userid'=>$row->userid));
-                                        $trace->output(get_string('extremovedsuspend', 'enrol_ldap',
+                                        $trace->output(get_string('extremovedsuspend', 'enrol_ldapgroup',
                                             array('user_username'=> $row->username,
                                                   'course_shortname'=>$course_obj->shortname,
                                                   'course_id'=>$course_obj->id)));
@@ -533,8 +533,8 @@ class enrol_ldap_plugin extends enrol_plugin {
                                     if ($row->status != ENROL_USER_SUSPENDED) {
                                         $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, array('enrolid'=>$instance->id, 'userid'=>$row->userid));
                                     }
-                                    role_unassign_all(array('contextid'=>$row->contextid, 'userid'=>$row->userid, 'component'=>'enrol_ldap', 'itemid'=>$instance->id));
-                                    $trace->output(get_string('extremovedsuspendnoroles', 'enrol_ldap',
+                                    role_unassign_all(array('contextid'=>$row->contextid, 'userid'=>$row->userid, 'component'=>'enrol_ldapgroup', 'itemid'=>$instance->id));
+                                    $trace->output(get_string('extremovedsuspendnoroles', 'enrol_ldapgroup',
                                         array('user_username'=> $row->username,
                                               'course_shortname'=>$course_obj->shortname,
                                               'course_id'=>$course_obj->id)));
@@ -573,7 +573,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                             $sql = 'SELECT id,username,1 FROM {user} WHERE idnumber = ? AND deleted = 0';
                             $member = $DB->get_record_sql($sql, array($ldapmember));
                             if(empty($member) || empty($member->id)){
-                                $trace->output(get_string('couldnotfinduser', 'enrol_ldap', $ldapmember));
+                                $trace->output(get_string('couldnotfinduser', 'enrol_ldapgroup', $ldapmember));
                                 continue;
                             }
 
@@ -593,22 +593,22 @@ class enrol_ldap_plugin extends enrol_plugin {
                                 // set it back to active on external re-enrolment. So set it
                                 // unconditionally to cover both cases.
                                 $DB->set_field('user_enrolments', 'status', ENROL_USER_ACTIVE, array('enrolid'=>$instance->id, 'userid'=>$member->id));
-                                $trace->output(get_string('enroluser', 'enrol_ldap',
+                                $trace->output(get_string('enroluser', 'enrol_ldapgroup',
                                     array('user_username'=> $member->username,
                                           'course_shortname'=>$course_obj->shortname,
                                           'course_id'=>$course_obj->id)));
 
                             } else {
-                                if (!$DB->record_exists('role_assignments', array('roleid'=>$role->id, 'userid'=>$member->id, 'contextid'=>$context->id, 'component'=>'enrol_ldap', 'itemid'=>$instance->id))) {
+                                if (!$DB->record_exists('role_assignments', array('roleid'=>$role->id, 'userid'=>$member->id, 'contextid'=>$context->id, 'component'=>'enrol_ldapgroup', 'itemid'=>$instance->id))) {
                                     // This happens when reviving users or when user has multiple roles in one course.
                                     $context = context_course::instance($course_obj->id);
-                                    role_assign($role->id, $member->id, $context->id, 'enrol_ldap', $instance->id);
+                                    role_assign($role->id, $member->id, $context->id, 'enrol_ldapgroup', $instance->id);
                                     $trace->output("Assign role to user '$member->username' in course '$course_obj->shortname ($course_obj->id)'");
                                 }
                                 if ($userenrolment->status == ENROL_USER_SUSPENDED) {
                                     // Reenable enrolment that was previously disabled. Enrolment refreshed
                                     $DB->set_field('user_enrolments', 'status', ENROL_USER_ACTIVE, array('enrolid'=>$instance->id, 'userid'=>$member->id));
-                                    $trace->output(get_string('enroluserenable', 'enrol_ldap',
+                                    $trace->output(get_string('enroluserenable', 'enrol_ldapgroup',
                                         array('user_username'=> $member->username,
                                               'course_shortname'=>$course_obj->shortname,
                                               'course_id'=>$course_obj->id)));
@@ -919,7 +919,7 @@ class enrol_ldap_plugin extends enrol_plugin {
                 return ($users);
                 break;
             default:
-                error_log($this->errorlogtag.get_string('explodegroupusertypenotsupported', 'enrol_ldap',
+                error_log($this->errorlogtag.get_string('explodegroupusertypenotsupported', 'enrol_ldapgroup',
                                                         $this->get_config('user_type_name')));
 
                 return array($group);
@@ -981,7 +981,7 @@ class enrol_ldap_plugin extends enrol_plugin {
         $course->shortname = $course_ext[$this->get_config('course_shortname')][0];
         if (empty($course->idnumber) || empty($course->fullname) || empty($course->shortname)) {
             // We are in trouble!
-            $trace->output(get_string('cannotcreatecourse', 'enrol_ldap').' '.var_export($course, true));
+            $trace->output(get_string('cannotcreatecourse', 'enrol_ldapgroup').' '.var_export($course, true));
             return false;
         }
 
@@ -994,7 +994,7 @@ class enrol_ldap_plugin extends enrol_plugin {
 
         // Check if the shortname already exists if it does - skip course creation.
         if ($DB->record_exists('course', array('shortname' => $course->shortname))) {
-            $trace->output(get_string('duplicateshortname', 'enrol_ldap', $course));
+            $trace->output(get_string('duplicateshortname', 'enrol_ldapgroup', $course));
             return false;
         }
 
@@ -1048,7 +1048,7 @@ class enrol_ldap_plugin extends enrol_plugin {
         }
 
         if (!$courseupdated) {
-            $trace->output(get_string('courseupdateskipped', 'enrol_ldap', $course));
+            $trace->output(get_string('courseupdateskipped', 'enrol_ldapgroup', $course));
             return false;
         }
 
@@ -1056,20 +1056,20 @@ class enrol_ldap_plugin extends enrol_plugin {
         if ((isset($updatedcourse->fullname) && empty($updatedcourse->fullname))
                 || (isset($updatedcourse->shortname) && empty($updatedcourse->shortname))) {
             // We are in trouble!
-            $trace->output(get_string('cannotupdatecourse', 'enrol_ldap', $course));
+            $trace->output(get_string('cannotupdatecourse', 'enrol_ldapgroup', $course));
             return false;
         }
 
         // Check if the shortname already exists if it does - skip course updating.
         if (isset($updatedcourse->shortname)
                 && $DB->record_exists('course', array('shortname' => $updatedcourse->shortname))) {
-            $trace->output(get_string('cannotupdatecourse_duplicateshortname', 'enrol_ldap', $course));
+            $trace->output(get_string('cannotupdatecourse_duplicateshortname', 'enrol_ldapgroup', $course));
             return false;
         }
 
         // Finally - update course in DB.
         update_course($updatedcourse);
-        $trace->output(get_string('courseupdated', 'enrol_ldap', $course));
+        $trace->output(get_string('courseupdated', 'enrol_ldapgroup', $course));
 
         return true;
     }

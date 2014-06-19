@@ -26,7 +26,7 @@
  * define('TEST_ENROL_LDAP_BIND_PW', 'somepassword');
  * define('TEST_ENROL_LDAP_DOMAIN', 'dc=example,dc=local');
  *
- * @package    enrol_ldap
+ * @package    enrol_ldapgroup
  * @category   phpunit
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -37,9 +37,9 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 
-class enrol_ldap_testcase extends advanced_testcase {
+class enrol_ldapgroup_testcase extends advanced_testcase {
 
-    public function test_enrol_ldap() {
+    public function test_enrol_ldapgroup() {
         global $CFG, $DB;
 
         if (!extension_loaded('ldap')) {
@@ -77,7 +77,7 @@ class enrol_ldap_testcase extends advanced_testcase {
         }
 
         // Configure enrol plugin.
-        /** @var enrol_ldap_plugin $enrol */
+        /** @var enrol_ldapgroup_plugin $enrol */
         $enrol = enrol_get_plugin('ldap');
         $enrol->set_config('host_url', TEST_ENROL_LDAP_HOST_URL);
         $enrol->set_config('start_tls', 0);
@@ -417,9 +417,9 @@ class enrol_ldap_testcase extends advanced_testcase {
             $this->assertEquals($status, $ue->status);
         }
         if ($roleid) {
-            $this->assertTrue($DB->record_exists('role_assignments', array('contextid'=>$context->id, 'userid'=>$userid, 'roleid'=>$roleid, 'component'=>'enrol_ldap')));
+            $this->assertTrue($DB->record_exists('role_assignments', array('contextid'=>$context->id, 'userid'=>$userid, 'roleid'=>$roleid, 'component'=>'enrol_ldapgroup')));
         } else {
-            $this->assertFalse($DB->record_exists('role_assignments', array('contextid'=>$context->id, 'userid'=>$userid, 'component'=>'enrol_ldap')));
+            $this->assertFalse($DB->record_exists('role_assignments', array('contextid'=>$context->id, 'userid'=>$userid, 'component'=>'enrol_ldapgroup')));
         }
     }
 

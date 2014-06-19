@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'enrol_ldap', language 'en'.
+ * Strings for component 'enrol_ldapgroup', language 'en'.
  *
- * @package    enrol_ldap
+ * @package    enrol_ldapgroup
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @copyright  2010 Iñaki Arenaza <iarenaza@eps.mondragon.edu>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
