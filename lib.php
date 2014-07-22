@@ -117,6 +117,52 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
             }
         }
     }
+
+    /**
+     * Returns link to page which may be used to add new instance of enrolment plugin in course.
+     * @param int $courseid
+     * @return moodle_url page url
+     */
+    public function get_newinstance_link($courseid) {
+
+        $context = context_course::instance($courseid, MUST_EXIST);
+
+        if (!has_capability('moodle/course:enrolconfig', $context) or !has_capability('enrol/ldapgroup:config', $context)) {
+            return NULL;
+        }
+        // Multiple instances supported - multiple parent courses linked.
+        return new moodle_url('/enrol/ldapgroup/edit.php', array('courseid'=>$courseid));
+    }
+
+
+
+    /**
+     * Returns edit icons for the page with list of instances.
+     * @param stdClass $instance
+     * @return array
+     */
+    public function get_action_icons(stdClass $instance) {
+        global $OUTPUT;
+
+        if ($instance->enrol !== 'ldapgroup') {
+            throw new coding_exception('invalid enrol instance!');
+        }
+        $context = context_course::instance($instance->courseid);
+
+        $icons = array();
+
+        if (has_capability('enrol/ldapgroup:config', $context)) {
+            $editlink = new moodle_url("/enrol/ldapgroup/edit.php", array('courseid'=>$instance->courseid, 'id'=>$instance->id));
+            $icons[] = $OUTPUT->action_icon($editlink, new pix_icon('t/edit', get_string('edit'), 'core',
+                    array('class' => 'iconsmall')));
+        }
+
+        return $icons;
+    }
+
+
+
+
     /**
      * Is it possible to delete enrol instance via standard UI?
      *
@@ -168,12 +214,12 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
         core_php_time_limit::raise();
         raise_memory_limit(MEMORY_HUGE);
 
-       
+
         $enrolments = array();
-       
+
             // Get external enrolments according to LDAP server
         $memberofgroups = $this->ldap_find($user->username,array($this->config->memberofattribute),$this->config->user_attribute);
-        $memberofgroups=array_change_key_case($memberofgroups,CASE_LOWER);    
+        $memberofgroups=array_change_key_case($memberofgroups,CASE_LOWER);
         $memberofgroups = $memberofgroups[$this->config->memberofattribute];
             if ($this->config->nested_groups){
                 $memberofgroups=$this->ldap_find_user_groups($memberofgroups,array($this->config->user_attribute));
@@ -187,11 +233,11 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                      WHERE (ue.userid = :userid )";
             $params = array ('userid'=>$user->id);
             $enrolments['current'] = $DB->get_records_sql($sql, $params);
-        
+
 
         $ignorehidden = $this->get_config('ignorehiddencourses');
         $groupattribute = $this->get_config('group_attribute');
-        
+
             foreach ($enrolments['ext'] as $enrol) {
                 $ldapgroupid = $enrol[$groupattribute][0];
                 if (empty($ldapgroupid)) {
@@ -207,7 +253,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                          WHERE c.id = :courseid";
                 $params = array('courseid'=>$course->id);
                 if (!($enrol_instance = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE))) {
-                    
+
                 }
 
                 if (!$instance = $DB->get_record('enrol', array('id'=>$enrol_instance->enrolid))) {
@@ -282,7 +328,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                 }
             }
             $transaction->allow_commit();
-        
+
 
         $this->ldap_close();
 
@@ -316,12 +362,12 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
         if ($onecourse) {
             $sql = "SELECT e.customint1 AS enrolgroup, e.id AS enrolid, e.courseid
                       FROM {enrol} e WHERE (e.courseid = :id AND e.enrol = 'ldapgroup')";
-            
+
             if (!$enrol = $DB->get_record_sql($sql, array('id'=>$onecourse))) {
                 // Course does not exist, nothing to sync.
                 return 0;
             }
-            
+
 
             // Feel free to unenrol everybody, no safety tricks here.
             $preventfullunenrol = false;
@@ -331,17 +377,17 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
         }
 
         // Get enrolments for each type of role.
-        
+
         $enrolments = array();
-        
+
             // Get all contexts
             $ldap_contexts = explode(';', $this->config->group_contexts);
 
             // Get all the fields we will want for the potential course creation
             // as they are light. Don't get membership -- potentially a lot of data.
             $ldap_fields_wanted = array('dn', $this->get_config('group_attribute','cn'),$this->get_config('group_memberofattribute', 'member'));
-            
-            
+
+
 
             // Define the search pattern
             $ldap_search_pattern = $this->config->group_objectclass;
@@ -351,7 +397,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
             }else{
                  $sql = "SELECT e.customint1 AS enrolgroup, e.id AS enrolid, e.courseid
                       FROM {enrol} e WHERE (e.courseid = :id AND e.enrol = 'ldapgroup')";
-            
+
                 if (!$enrols = $DB->get_record_sql($sql)) {
                     // Course does not exist, nothing to sync.
                     return 0;
@@ -428,7 +474,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                         // this is an odd array -- mix of hash and array --
                         $ldapmembers = array();
 
-                       
+
                             $ldapmembers = $ldapgroup[$this->config->memberattribute];
                             unset($ldapmembers['count']); // Remove oddity ;)
 
@@ -588,8 +634,8 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                         $transaction->allow_commit();
                     }
                 }
-            
-        
+
+
         @$this->ldap_close();
         $trace->finished();
     }
@@ -600,7 +646,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
      * the intermediate groups and return the full list of users that
      * directly or indirectly belong to the group.
      *
-     * 
+     *
      * @return array the list of users belonging to the group. If $group
      *         is not actually a group, returns array($group).
      */
@@ -628,10 +674,10 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                     }
                 }else{
                     if (!$this->config->memberattribute_isdn){
-                        
+
                             $user = $this->ldap_find($ldapmember,array($this->config->user_attribute) ,'dn');
                             $user=$user?$user[$this->config->user_attribute][0]:$user;
-                        
+
                     }
                     if ($user){
                         array_push($users, $user);
@@ -686,15 +732,15 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
         }
         return $ldap_user;
     }
-   
-    
+
+
      /**
      * Given a user name (either a RDN or a DN), get the list of users
      * belonging to that group. If the group has nested groups, expand all
      * the intermediate groups and return the full list of users that
      * directly or indirectly belong to the group.
      *
-     * 
+     *
      * @return array the list of users belonging to the group. If $group
      *         is not actually a group, returns array($group).
      */
@@ -714,7 +760,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                             $group_members=$this->ldap_find_user_groups($group[$this->config->memberofattribute],$from);
                             $groups = array_merge($groups, $group_members);
                         }
-                    }       
+                    }
                     }
                     array_push($groups, $group[$this->config->group_attribute][0]);
                 }
@@ -832,7 +878,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
         // Get all the fields we will want for the potential course creation
         // as they are light. don't get membership -- potentially a lot of data.
         $ldap_fields_wanted = array('dn', $this->get_config('group_attribute'));
-        
+
 
         // Define the search pattern
         if (empty($ldap_search_pattern)) {
@@ -984,10 +1030,10 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
 
 
     /**
-     * 
      *
-     * 
-     * @return 
+     *
+     *
+     * @return
      */
     private function create_user($ldap_user)
     {
