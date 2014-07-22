@@ -101,7 +101,7 @@ $string['user_attribute'] = 'If the group membership contains distinguised names
 $string['user_attribute_key'] = 'ID number attribute';
 $string['ldap_encoding'] = 'Specify encoding used by LDAP server. Most probably utf-8, MS AD v2 uses default platform encoding such as cp1252, cp1250, etc.';
 $string['ldap_encoding_key'] = 'LDAP encoding';
-$string['ldap:manage'] = 'Manage LDAP enrol instances';
+$string['ldapgroup:manage'] = 'Manage LDAP group  enrol instances';
 $string['login_sync_key']='Sync at login user';
 $string['login_sync']='Enable syncing during interactive login ';
 
@@ -112,7 +112,7 @@ $string['member_attribute_key'] = 'Group membership attribute';
 $string['memberof_attribute'] = 'Group membership attribute in user entry. This denotes the user group(s) memberhsips. Usually \'member\', or \'memberUid\'';
 $string['memberof_attribute_key'] = 'User member attribute';
 $string['memberofattribute_isdn'] = 'If the user member of contains distinguised names, you need to specify it here. If it does, you also need to configure the remaining settings of this section';
-$string['memberofattribute_isdn_key'] = 'Member of attribute uses ';$string['nested_groups'] = 'Do you want to use nested groups (groups of groups) for enrolment?';
+$string['memberofattribute_isdn_key'] = 'Member of attribute uses dn';
 $string['nested_groups'] = 'Do you want to use nested groups (groups of groups) for enrolment?';
 $string['nested_groups_key'] = 'Nested groups';
 $string['nested_groups_settings'] = 'Nested groups settings';

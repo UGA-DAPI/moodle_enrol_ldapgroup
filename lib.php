@@ -244,7 +244,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                 // Remove this course from the current courses, to be able to detect
                 // which current courses should be unenroled from when we finish processing
                 // external enrolments.
-                unset($enrolments[['current'][$enrol_instance->id]);
+                unset($enrolments['current'][$enrol_instance->id]);
             }
 
             // Deal with unenrolments.
@@ -256,7 +256,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                     case ENROL_EXT_REMOVED_UNENROL:
                         $this->unenrol_user($instance, $user->id);
                         $trace->output(get_string('extremovedunenrol', 'enrol_ldapgroup',
-                            array('user_username'=> $user->username
+                            array('user_username'=> $user->username,
                                   'course_id'=>$course->courseid)));
                         break;
                     case ENROL_EXT_REMOVED_KEEP:
@@ -339,7 +339,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
 
             // Get all the fields we will want for the potential course creation
             // as they are light. Don't get membership -- potentially a lot of data.
-            $ldap_fields_wanted = array('dn', $this->get_config('group_attribute','cn'),$this->get_config('group_memberofattribute', 'member');
+            $ldap_fields_wanted = array('dn', $this->get_config('group_attribute','cn'),$this->get_config('group_memberofattribute', 'member'));
             
             
 
@@ -494,7 +494,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                                 case ENROL_EXT_REMOVED_UNENROL:
                                     $this->unenrol_user($instance, $row->userid);
                                     $trace->output(get_string('extremovedunenrol', 'enrol_ldapgroup',
-                                        array('user_username'=> $row->username));
+                                        array('user_username'=> $row->username)));
                                     break;
                                 case ENROL_EXT_REMOVED_KEEP:
                                     // Keep - only adding enrolments
@@ -503,7 +503,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                                     if ($row->status != ENROL_USER_SUSPENDED) {
                                         $DB->set_field('user_enrolments', 'status', ENROL_USER_SUSPENDED, array('enrolid'=>$instance->id, 'userid'=>$row->userid));
                                         $trace->output(get_string('extremovedsuspend', 'enrol_ldapgroup',
-                                            array('user_username'=> $row->username));
+                                            array('user_username'=> $row->username)));
                                     }
                                     break;
                                 case ENROL_EXT_REMOVED_SUSPENDNOROLES:
@@ -513,7 +513,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                                     role_unassign_all(array('contextid'=>$row->contextid, 'userid'=>$row->userid, 'component'=>'enrol_ldapgroup', 'itemid'=>$instance->id));
                                     $trace->output(get_string('extremovedsuspendnoroles', 'enrol_ldapgroup',
                                         array('user_username'=> $row->username,
-                                              'course_shortname'=>$course_obj-));
+                                              'course_shortname'=>$course_obj)));
                                     break;
                                 }
                             }
@@ -566,7 +566,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                                 // unconditionally to cover both cases.
                                 $DB->set_field('user_enrolments', 'status', ENROL_USER_ACTIVE, array('enrolid'=>$instance->id, 'userid'=>$member->id));
                                 $trace->output(get_string('enroluser', 'enrol_ldapgroup',
-                                    array('user_username'=> $member->username));
+                                    array('user_username'=> $member->username)));
 
                             } else {
                                 if (!$DB->record_exists('role_assignments', array('roleid'=>$role->id, 'userid'=>$member->id, 'contextid'=>$context->id, 'component'=>'enrol_ldapgroup', 'itemid'=>$instance->id))) {
@@ -627,10 +627,10 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
                         }
                     }
                 }else{
-                    if (!$this->config->memberattribute_isdn)){
+                    if (!$this->config->memberattribute_isdn){
                         
                             $user = $this->ldap_find($ldapmember,array($this->config->user_attribute) ,'dn');
-                            $user=$user?$user[$this->config->user_attribute]][0]:$user;
+                            $user=$user?$user[$this->config->user_attribute][0]:$user;
                         
                     }
                     if ($user){

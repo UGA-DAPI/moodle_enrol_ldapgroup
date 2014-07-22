@@ -84,7 +84,7 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configselect('enrol_ldapgroup/search_subcontexts', get_string('search_subcontexts_key', 'enrol_ldapgroup'), get_string('search_subcontexts', 'enrol_ldapgroup'), key($yesno), $yesno));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/user_attribute', get_string('user_attribute_key', 'enrol_ldapgroup'), get_string('user_attribute', 'enrol_ldapgroup'), '', true, true));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/memberof_attribute', get_string('memberof_attribute_key', 'enrol_ldapgroup'), get_string('memberof_attribute', 'enrol_ldapgroup'), 'memberUid', false));
-        $settings->add(new admin_setting_configtext('enrol_ldapgroup/memberofattribute_isdn', get_string('memberofattribute_isdn_key', 'enrol_ldapgroup'), get_string('memberofattribute_isdn', 'enrol_ldapgroup'),0,$yesno ));
+        $settings->add(new admin_setting_configselect('enrol_ldapgroup/memberofattribute_isdn', get_string('memberofattribute_isdn_key', 'enrol_ldapgroup'), get_string('memberofattribute_isdn', 'enrol_ldapgroup'),0,$yesno ));
         $settings->add(new admin_setting_configtext('enrol_ldapgroup/user_objectclass', get_string('objectclass_key', 'enrol_ldapgroup'), get_string('user_objectclass', 'enrol_ldapgroup'), ''));
         $settings->add(new admin_setting_configcheckbox('enrol_ldapgroup/autocreate_users', get_string('autocreate_users_key', 'enrol_ldapgroup'), get_string('autocreate_users', 'enrol_ldapgroup'), false));
         $settings->add(new admin_setting_configcheckbox('enrol_ldapgroup/ignorehiddencourses', get_string('ignorehiddencourses', 'enrol_database'), get_string('ignorehiddencourses_desc', 'enrol_database'), 0));
