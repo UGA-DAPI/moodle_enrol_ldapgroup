@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * LDAP enrolment plugin tests.
+ * LDAPgroup enrolment plugin tests.
  *
  * NOTE: in order to execute this test you need to set up
  *       OpenLDAP server with core, cosine, nis and internet schemas
@@ -42,13 +42,13 @@ class enrol_ldapgroup_testcase extends advanced_testcase {
     public function test_enrol_ldapgroup() {
         global $CFG, $DB;
 
-        if (!extension_loaded('ldap')) {
+        if (!extension_loaded('ldapgroup')) {
             $this->markTestSkipped('LDAP extension is not loaded.');
         }
 
         $this->resetAfterTest();
 
-        require_once($CFG->dirroot.'/enrol/ldap/lib.php');
+        require_once($CFG->dirroot.'/enrol/ldapgroup/lib.php');
         require_once($CFG->libdir.'/ldaplib.php');
 
         if (!defined('TEST_ENROL_LDAP_HOST_URL') or !defined('TEST_ENROL_LDAP_BIND_DN') or !defined('TEST_ENROL_LDAP_BIND_PW') or !defined('TEST_ENROL_LDAP_DOMAIN')) {
@@ -78,7 +78,7 @@ class enrol_ldapgroup_testcase extends advanced_testcase {
 
         // Configure enrol plugin.
         /** @var enrol_ldapgroup_plugin $enrol */
-        $enrol = enrol_get_plugin('ldap');
+        $enrol = enrol_get_plugin('ldapgroup');
         $enrol->set_config('host_url', TEST_ENROL_LDAP_HOST_URL);
         $enrol->set_config('start_tls', 0);
         $enrol->set_config('ldap_version', 3);
@@ -102,10 +102,7 @@ class enrol_ldapgroup_testcase extends advanced_testcase {
         $enrol->set_config('autocreate', 0);
         $enrol->set_config('unenrolaction', ENROL_EXT_REMOVED_KEEP);
 
-        $roles = get_all_roles();
-        foreach ($roles as $role) {
-            $enrol->set_config('contexts_role'.$role->id, '');
-            $enrol->set_config('memberattribute_role'.$role->id, '');
+        
         }
 
         // Create group for teacher enrolments.

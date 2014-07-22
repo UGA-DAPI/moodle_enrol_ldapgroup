@@ -18,8 +18,8 @@
  * LDAP enrolment plugin installation.
  *
  * @package    enrol_ldapgroup
- * @author     Iñaki Arenaza
- * @copyright  2010 Iñaki Arenaza <iarenaza@eps.mondragon.edu>
+ * @author     Fabrice Menard
+ * @copyright  2014 Fabrice Menard <fabrice.menard@upmf-grenoble.fr> - 2010 Iñaki Arenaza <iarenaza@eps.mondragon.edu>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

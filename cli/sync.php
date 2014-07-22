@@ -34,9 +34,10 @@
  *     -d log_errors=1 -d error_reporting=E_ALL -d display_errors=0 -d html_errors=0
  *
  * @package    enrol_ldapgroup
- * @author     Iñaki Arenaza - based on code by Martin Dougiamas, Martin Langhoff and others
+ * @author     Fabrice Menard - based on code by Iñaki Arenaza Martin Dougiamas, Martin Langhoff and others
  * @copyright  1999 onwards Martin Dougiamas {@link http://moodle.com}
  * @copyright  2010 Iñaki Arenaza <iarenaza@eps.mondragon.edu>
+ * @copyright  2014 Fabrice Menard <fabrice.menard@upmf-grenoble.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -48,12 +49,12 @@ require_once("$CFG->libdir/clilib.php");
 // Ensure errors are well explained.
 set_debugging(DEBUG_DEVELOPER, true);
 
-if (!enrol_is_enabled('ldap')) {
+if (!enrol_is_enabled('ldapgroup')) {
     cli_error(get_string('pluginnotenabled', 'enrol_ldapgroup'), 2);
 }
 
 /** @var enrol_ldapgroup_plugin $enrol */
-$enrol = enrol_get_plugin('ldap');
+$enrol = enrol_get_plugin('ldapgroup');
 
 $trace = new text_progress_trace();
 
