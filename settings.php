@@ -33,7 +33,7 @@ if ($ADMIN->fulltree) {
     if (!function_exists('ldap_connect')) {
         $settings->add(new admin_setting_heading('enrol_phpldap_noextension', '', get_string('phpldap_noextension', 'enrol_ldapgroup')));
     } else {
-        require_once($CFG->dirroot.'/enrol/ldapgroup/settingslib.php');
+//        require_once($CFG->dirroot.'/enrol/ldapgroup/settingslib.php');
         require_once($CFG->libdir.'/ldaplib.php');
 
         $yesno = array(get_string('no'), get_string('yes'));
@@ -45,8 +45,8 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configselect('enrol_ldapgroup/email_report_enabled', get_string('email_report_enabled_key', 'enrol_ldapgroup'), get_string('email_report_enabled', 'enrol_ldapgroup'), 1, $yesno));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/email_report', get_string('email_report_key', 'enrol_ldapgroup'), get_string('email_report', 'enrol_ldapgroup'), '', true));
         $settings->add(new admin_setting_configcheckbox('enrol_ldapgroup/debug_mode', get_string('debug_mode_key', 'enrol_ldapgroup'), get_string('debug_mode', 'enrol_ldapgroup'), false));
-        
-        
+
+
         //--- connection settings ---
         $settings->add(new admin_setting_heading('enrol_ldapgroup_server_settings', get_string('server_settings', 'enrol_ldapgroup'), ''));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/host_url', get_string('host_url_key', 'enrol_ldapgroup'), get_string('host_url', 'enrol_ldapgroup'), ''));
@@ -63,27 +63,27 @@ if ($ADMIN->fulltree) {
         $settings->add(new admin_setting_configpasswordunmask('enrol_ldapgroup/bind_pw', get_string('bind_pw_key', 'enrol_ldapgroup'), get_string('bind_pw', 'enrol_ldapgroup'), ''));
 
         //--- group lookup settings
-        $settings->add(new admin_setting_heading('enrol_ldapgroup_group_settings', get_string('group_lookup', 'enrol_ldapgroup'), ''));
+        $settings->add(new admin_setting_heading('enrol_ldapgroup_group_settings', get_string('group_settings', 'enrol_ldapgroup'), ''));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/group_objectclass', get_string('objectclass_key', 'enrol_ldapgroup'), get_string('objectclass', 'enrol_ldapgroup'), 'posixGroup'));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/group_filter', get_string('filter_key', 'enrol_ldapgroup'), get_string('filter', 'enrol_ldapgroup'), '(cn=*)'));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/group_contexts', get_string('group_contexts_key', 'enrol_ldapgroup'), get_string('group_contexts', 'enrol_ldapgroup'), ''));
         $settings->add(new admin_setting_configselect('enrol_ldapgroup/group_search_sub', get_string('search_subcontexts_key', 'enrol_ldapgroup'), get_string('group_search_sub', 'enrol_ldapgroup'), key($yesno), $yesno));
-        $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/memberattribute', get_string('memberattribute_key', 'enrol_ldapgroup'), get_string('memberattribute', 'enrol_ldapgroup'), 'member', false));
-        $settings->add(new admin_setting_configselect('enrol_ldapgroup/memberattribute_isdn', get_string('memberattribute_isdn_key', 'enrol_ldapgroup'), get_string('memberattribute_isdn', 'enrol_ldapgroup'), 0, $yesno));
+        $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/member_attribute', get_string('member_attribute_key', 'enrol_ldapgroup'), get_string('member_attribute', 'enrol_ldapgroup'), 'member', false));
+        $settings->add(new admin_setting_configselect('enrol_ldapgroup/member_attribute_isdn', get_string('memberattribute_isdn_key', 'enrol_ldapgroup'), get_string('memberattribute_isdn', 'enrol_ldapgroup'), 0, $yesno));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/group_attribute', get_string('group_attribute_key', 'enrol_ldapgroup'), get_string('group_attribute', 'enrol_ldapgroup'), 'cn', true));
-        
+
         //--- user lookup settings
-        $settings->add(new admin_setting_heading('enrol_ldapgroup_user_settings', get_string('user_lookup', 'enrol_ldapgroup'), ''));
+        $settings->add(new admin_setting_heading('enrol_ldapgroup_user_settings', get_string('user_settings', 'enrol_ldapgroup'), ''));
         $usertypes = ldap_supported_usertypes();
         $settings->add(new admin_setting_configselect('enrol_ldapgroup/user_type', get_string('user_type_key', 'enrol_ldapgroup'), get_string('user_type', 'enrol_ldapgroup'), end($usertypes), $usertypes));
         $opt_deref = array();
         $opt_deref[LDAP_DEREF_NEVER] = get_string('no');
         $opt_deref[LDAP_DEREF_ALWAYS] = get_string('yes');
-        $settings->add(new admin_setting_configselect('enrol_ldapgroup/opt_deref', get_string('opt_dereference_key', 'enrol_ldapgroup'), get_string('user_dereference', 'enrol_ldapgroup'), key($opt_deref), $opt_deref));
+        $settings->add(new admin_setting_configselect('enrol_ldapgroup/opt_deref', get_string('opt_deref_key', 'enrol_ldapgroup'), get_string('opt_deref', 'enrol_ldapgroup'), key($opt_deref), $opt_deref));
         $settings->add(new admin_setting_configtext('enrol_ldapgroup/user_contexts', get_string('user_contexts_key', 'enrol_ldapgroup'), get_string('user_contexts', 'enrol_ldapgroup'), ''));
-        $settings->add(new admin_setting_configselect('enrol_ldapgroup/user_search_sub', get_string('search_subcontexts_key', 'enrol_ldapgroup'), get_string('user_search_sub', 'enrol_ldapgroup'), key($yesno), $yesno));
+        $settings->add(new admin_setting_configselect('enrol_ldapgroup/search_subcontexts', get_string('search_subcontexts_key', 'enrol_ldapgroup'), get_string('search_subcontexts', 'enrol_ldapgroup'), key($yesno), $yesno));
         $settings->add(new admin_setting_configtext_trim_lower('enrol_ldapgroup/user_attribute', get_string('user_attribute_key', 'enrol_ldapgroup'), get_sring('user_attribute', 'enrol_ldapgroup'), '', true, true));
-		$settings->add(new admin_setting_ldapgroup_trim_lower('enrol_ldapgroup/memberof_attribute', get_string('memberof_attribute_key', 'enrol_ldapgroup'), get_string('memberof_attribute', 'enrol_ldapgroup'), 'memberUid', false));
+        $settings->add(new admin_setting_ldapgroup_trim_lower('enrol_ldapgroup/memberof_attribute', get_string('memberof_attribute_key', 'enrol_ldapgroup'), get_string('memberof_attribute', 'enrol_ldapgroup'), 'memberUid', false));
         $settings->add(new admin_setting_configtext('enrol_ldapgroup/memberofattribute_isdn', get_string('memberofattribute_isdn_key', 'enrol_ldapgroup'), get_string('memberofattribute_isdn', 'enrol_ldapgroup'),0,$yesno ));
         $settings->add(new admin_setting_configtext('enrol_ldapgroup/user_objectclass', get_string('objectclass_key', 'enrol_ldapgroup'), get_string('user_objectclass', 'enrol_ldapgroup'), ''));
         $settings->add(new admin_setting_configcheckbox('enrol_ldapgroup/autocreate_users', get_string('autocreate_users_key', 'enrol_ldapgroup'), get_string('autocreate_users', 'enrol_ldapgroup'), false));
@@ -94,7 +94,7 @@ if ($ADMIN->fulltree) {
                          ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'));
         $settings->add(new admin_setting_configselect('enrol_ldapgroup/unenrolaction', get_string('extremovedaction', 'enrol'), get_string('extremovedaction_help', 'enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
 
-        
+
         //--- nested groups settings ---
         $settings->add(new admin_setting_heading('enrol_ldapgroup_nested_groups_settings', get_string('nested_groups_settings', 'enrol_ldapgroup'), ''));
         $options = $yesno;

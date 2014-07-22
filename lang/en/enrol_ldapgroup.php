@@ -64,6 +64,9 @@ $string['extremovedsuspend'] =  "Disabled enrolment for user '{\$a->user_usernam
 $string['extremovedsuspendnoroles'] =  "Disabled enrolment and removed roles for user '{\$a->user_username}' in course '{\$a->course_shortname}' (id {\$a->course_id})";
 $string['extremovedunenrol'] =  "Unenrol user '{\$a->user_username}' from course '{\$a->course_shortname}' (id {\$a->course_id})";
 $string['failed'] = "Failed!\n";
+
+$string['filter'] = 'LDAP filter used to search cohorts. Usually \'cn=*\' or \'cn=*2013*\'';
+$string['filter_key'] = 'Filter';
 $string['general_settings'] = 'General settings';
 
 $string['group_contexts'] = 'List of contexts where groups are located. Separate different contexts with \';\'. For example: \'ou=users,o=org; ou=others,o=org\'';
@@ -122,6 +125,8 @@ $string['pluginname'] = 'LDAP Group enrolments';
 $string['pluginname_desc'] = '<p>You can use an LDAP server to control your enrolments. It is assumed your LDAP tree contains groups that map to the courses, and that each of those groups will have membership entries to map to students.</p><p>It is assumed that courses are defined as groups in LDAP, with each group having multiple membership fields (<em>member</em> or <em>memberUid</em>) that contain a uniqueidentification of the user.</p><p>To use LDAP enrolment, your users <strong>must</strong> to have a valid  idnumber field. The LDAP groups must have that idnumber in the member fields for a user to be enrolled in the course. This will usually work well if you are already using LDAP Authentication.</p><p>Enrolments will be updated when the user logs in. You can also run a script to keep enrolments in synch. Look in <em>enrol/ldap/cli/sync.php</em>.</p>';
 $string['pluginnotenabled'] = 'Plugin not enabled!';
 
+$string['search_subcontexts_key'] = 'Search subcontexts';
+
 $string['server_settings'] = 'LDAP server settings';
 $string['synccourserole'] = "== Synching course '{\$a->idnumber}' for role '{\$a->role_shortname}'\n";
 $string['synchronized_groups'] = 'Done. Synchornized {$a} groups.';
@@ -138,6 +143,8 @@ $string['user_created'] = 'User "{$a}" created';
 $string['user_dbinsert'] = 'Inserted user {$a->name} with id {$a->id}';
 $string['user_dereference'] = 'Determines how aliases are handled during search. Select one of the following values: "No" (LDAP_DEREF_NEVER) or "Yes" (LDAP_DEREF_ALWAYS)';
 $string['user_dereference_key'] = 'Dereference aliases';
+$string['search_subcontexts_key'] = 'Search subcontexts';
+
 $string['user_objectclass'] = 'Optional: Overrides objectClass used to name/search users on ldap_user_type. Usually you dont need to change this.';
 $string['user_search_sub'] = 'If the group membership contains distinguised names, specify if the search for users is done in subcontexts too';
 $string['user_search_sub_key'] = 'Search subcontexts';
