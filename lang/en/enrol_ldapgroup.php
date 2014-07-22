@@ -78,7 +78,7 @@ $string['group_existing'] = 'group "{$a}" already exists, skipping';
 $string['group_filter'] = 'LDAP filter used to search groups. Usually \'cn=*\' or \'cn=*2013*\'';
 $string['group_filter_key'] = 'Filter';
 $string['group_found_users'] = 'Found {$a} users';
-$string['group_lookup'] = 'group lookup settings';
+$string['group_settings'] = 'group lookup settings';
 $string['group_name'] = 'LDAP attribute to get the group name from';
 $string['group_name_key'] = 'group name';
 $string['group_no_users'] = 'no users found';
@@ -125,6 +125,7 @@ $string['pluginname'] = 'LDAP Group enrolments';
 $string['pluginname_desc'] = '<p>You can use an LDAP server to control your enrolments. It is assumed your LDAP tree contains groups that map to the courses, and that each of those groups will have membership entries to map to students.</p><p>It is assumed that courses are defined as groups in LDAP, with each group having multiple membership fields (<em>member</em> or <em>memberUid</em>) that contain a uniqueidentification of the user.</p><p>To use LDAP enrolment, your users <strong>must</strong> to have a valid  idnumber field. The LDAP groups must have that idnumber in the member fields for a user to be enrolled in the course. This will usually work well if you are already using LDAP Authentication.</p><p>Enrolments will be updated when the user logs in. You can also run a script to keep enrolments in synch. Look in <em>enrol/ldap/cli/sync.php</em>.</p>';
 $string['pluginnotenabled'] = 'Plugin not enabled!';
 
+$string['search_subcontexts'] = 'If the group membership contains distinguised names, specify if the search for users is done in subcontexts too';
 $string['search_subcontexts_key'] = 'Search subcontexts';
 
 $string['server_settings'] = 'LDAP server settings';
@@ -141,13 +142,11 @@ $string['user_contexts'] = 'If the group membership contains distinguised names,
 $string['user_contexts_key'] = 'User Contexts';
 $string['user_created'] = 'User "{$a}" created';
 $string['user_dbinsert'] = 'Inserted user {$a->name} with id {$a->id}';
-$string['user_dereference'] = 'Determines how aliases are handled during search. Select one of the following values: "No" (LDAP_DEREF_NEVER) or "Yes" (LDAP_DEREF_ALWAYS)';
-$string['user_dereference_key'] = 'Dereference aliases';
+$string['user_deref'] = 'Determines how aliases are handled during search. Select one of the following values: "No" (LDAP_DEREF_NEVER) or "Yes" (LDAP_DEREF_ALWAYS)';
+$string['user_deref_key'] = 'Dereference aliases';
 $string['search_subcontexts_key'] = 'Search subcontexts';
 
 $string['user_objectclass'] = 'Optional: Overrides objectClass used to name/search users on ldap_user_type. Usually you dont need to change this.';
-$string['user_search_sub'] = 'If the group membership contains distinguised names, specify if the search for users is done in subcontexts too';
-$string['user_search_sub_key'] = 'Search subcontexts';
 $string['user_settings'] = 'User lookup settings';
 $string['user_synchronized'] = 'Synchronized {$a->count} added, {$a->discount} removed users for group "{$a->group}"';
 $string['user_type'] = 'If the group membership contains distinguished names, specify how users are stored in LDAP';
