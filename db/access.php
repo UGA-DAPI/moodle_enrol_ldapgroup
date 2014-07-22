@@ -33,7 +33,15 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         )
     ),
+    'enrol/ldapgroup:config' => array(
 
+	    'captype' => 'write',
+	    'contextlevel' => CONTEXT_COURSE,
+	    'archetypes' => array(
+		    'editingteacher' => CAP_ALLOW,
+		    'manager' => CAP_ALLOW,
+	    )
+									        ),
 );
 
 
