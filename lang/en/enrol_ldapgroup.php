@@ -109,6 +109,8 @@ $string['memberattribute_isdn'] = 'If the group membership contains distinguised
 $string['memberattribute_isdn_key'] = 'Member attribute uses dn';
 $string['member_attribute'] = 'Group membership attribute in user entry. This denotes the user group(s) memberhsips. Usually \'member\', or \'memberUid\'';
 $string['member_attribute_key'] = 'Group membership attribute';
+$string['memberof_attribute'] = 'Group membership attribute in user entry. This denotes the user group(s) memberhsips. Usually \'member\', or \'memberUid\'';
+$string['memberof_attribute_key'] = 'User member attribute';
 $string['memberofattribute_isdn'] = 'If the user member of contains distinguised names, you need to specify it here. If it does, you also need to configure the remaining settings of this section';
 $string['memberofattribute_isdn_key'] = 'Member of attribute uses ';$string['nested_groups'] = 'Do you want to use nested groups (groups of groups) for enrolment?';
 $string['nested_groups'] = 'Do you want to use nested groups (groups of groups) for enrolment?';
