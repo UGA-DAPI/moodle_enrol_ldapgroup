@@ -60,8 +60,8 @@ if ($instanceid) {
     $instance->id         = null;
     $instance->courseid   = $course->id;
     $instance->enrol      = 'ldapgroup';
-    $instance->customint1 = ''; // ldapgroup id.
-    $instance->customint2 = 0;  // Optional group id.
+    $instance->customtext1 = ''; // ldapgroup cn
+    $instance->customint1 = 0;  // Optional group id.
 }
 
 // Try and make the manage instances node on the navigation active.
@@ -86,11 +86,11 @@ if ($mform->is_cancelled()) {
         $instance->name         = $data->name;
         $instance->status       = $data->status;
         $instance->roleid       = $data->roleid;
-        $instance->customint2   = $data->customint2;
+        $instance->customint1   = $data->customint1;
         $instance->timemodified = time();
         $DB->update_record('enrol', $instance);
     }  else {
-        $enrol->add_instance($course, array('name'=>$data->name, 'status'=>$data->status, 'customint1'=>$data->customint1, 'roleid'=>$data->roleid, 'customint2'=>$data->customint2));
+        $enrol->add_instance($course, array('name'=>$data->name, 'status'=>$data->status, 'customtext1'=>$data->customtext1, 'roleid'=>$data->roleid, 'customint1'=>$data->customint1));
     }
     $trace = new null_progress_trace();
     enrol_ldapgroup_sync($trace, $course->id);

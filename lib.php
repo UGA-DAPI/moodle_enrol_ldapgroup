@@ -227,7 +227,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
             $enrolments['ext'] =  $memberofgroups;
 
             // Get the list of current user enrolments that come from LDAP
-            $sql= "SELECT e.customint1, ue.status, e.id as enrolid, e.courseid
+            $sql= "SELECT e.customtext1, ue.status, e.id as enrolid, e.courseid
                      FROM {user_enrolments} ue
                      JOIN {enrol} e ON (e.enrol='ldapgroup' AND e.id=ue.enrolid)
                      WHERE (ue.userid = :userid )";
@@ -360,7 +360,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
 
         $oneidnumber = null;
         if ($onecourse) {
-            $sql = "SELECT e.customint1 AS enrolgroup, e.id AS enrolid, e.courseid
+            $sql = "SELECT e.customtext1 AS enrolgroup, e.id AS enrolid, e.courseid
                       FROM {enrol} e WHERE (e.courseid = :id AND e.enrol = 'ldapgroup')";
 
             if (!$enrol = $DB->get_record_sql($sql, array('id'=>$onecourse))) {
@@ -395,7 +395,7 @@ class enrol_ldapgroup_plugin extends enrol_plugin {
             if ($oneidnumber !== null) {
                 $ldap_search_pattern = "(&$ldap_search_pattern({$this->config->group_attribute}=$oneidnumber))";
             }else{
-                 $sql = "SELECT e.customint1 AS enrolgroup, e.id AS enrolid, e.courseid
+                 $sql = "SELECT e.customtext1 AS enrolgroup, e.id AS enrolid, e.courseid
                       FROM {enrol} e WHERE (e.courseid = :id AND e.enrol = 'ldapgroup')";
 
                 if (!$enrols = $DB->get_record_sql($sql)) {

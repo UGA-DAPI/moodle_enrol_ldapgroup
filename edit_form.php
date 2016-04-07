@@ -54,17 +54,17 @@ class enrol_ldapgroup_edit_form extends moodleform {
         $mform->addElement('select', 'status', get_string('status', 'enrol_ldapgroup'), $options);
 
         if ($instance->id) {
-            if ($ldapgroup = $DB->get_record('ldapgroup', array('id'=>$instance->customint1))) {
+            /*if ($ldapgroup = $DB->get_record('ldapgroup', array('id'=>$instance->customint1))) {
                 $ldapgroups = array($instance->customint1=>format_string($ldapgroup->name, true, array('context'=>context::instance_by_id($ldapgroup->contextid))));
             } else {
                 $ldapgroups = array($instance->customint1=>get_string('error'));
-            }
-            $mform->addElement('select', 'customint1', get_string('ldapgroup', 'ldapgroup'), $ldapgroups);
-            $mform->setConstant('customint1', $instance->customint1);
-            $mform->hardFreeze('customint1', $instance->customint1);
+            }*/
+            $mform->addElement('text', 'customtext1', get_string('ldapgroup', 'ldapgroup'));
+            /*$mform->setConstant('customint1', $instance->customint1);
+            $mform->hardFreeze('customint1', $instance->customint1);*/
 
         } else {
-            $ldapgroups = array('' => get_string('choosedots'));
+           /* $ldapgroups = array('' => get_string('choosedots'));
             list($sqlparents, $params) = $DB->get_in_or_equal($coursecontext->get_parent_context_ids());
             $sql = "SELECT id, name, idnumber, contextid
                       FROM {ldapgroup}
@@ -78,9 +78,10 @@ class enrol_ldapgroup_edit_form extends moodleform {
                 }
                 $ldapgroups[$c->id] = format_string($c->name);
             }
-            $rs->close();
-            $mform->addElement('select', 'customint1', get_string('ldapgroup', 'ldapgroup'), $ldapgroups);
-            $mform->addRule('customint1', get_string('required'), 'required', null, 'client');
+            $rs->close();*/
+            $mform->addElement('text', 'customtext1', get_string('ldapgroup', 'ldapgroup'));
+            $mform->setType('customtext1', PARAM_TEXT);
+            $mform->addRule('customtext1', get_string('required'), 'required', null, 'client');
         }
 
         $roles = get_assignable_roles($coursecontext);
@@ -96,7 +97,7 @@ class enrol_ldapgroup_edit_form extends moodleform {
                 $roles[$instance->roleid] = get_string('error');
             }
         }
-        $mform->addElement('select', 'customint2', get_string('addgroup', 'enrol_ldapgroup'), $groups);
+        $mform->addElement('select', 'customint1', get_string('addgroup', 'enrol_ldapgroup'), $groups);
 
         $mform->addElement('hidden', 'courseid', null);
         $mform->setType('courseid', PARAM_INT);
@@ -118,8 +119,8 @@ class enrol_ldapgroup_edit_form extends moodleform {
 
         $errors = parent::validation($data, $files);
 
-        $params = array('roleid'=>$data['roleid'], 'customint1'=>$data['customint1'], 'courseid'=>$data['courseid'], 'id'=>$data['id']);
-        if ($DB->record_exists_select('enrol', "roleid = :roleid AND customint1 = :customint1 AND courseid = :courseid AND enrol = 'ldapgroup' AND id <> :id", $params)) {
+        $params = array('roleid'=>$data['roleid'], 'customtext1'=>$data['customtext1'], 'courseid'=>$data['courseid'], 'id'=>$data['id']);
+        if ($DB->record_exists_select('enrol', "roleid = :roleid AND customtext1 = :customtext1 AND courseid = :courseid AND enrol = 'ldapgroup' AND id <> :id", $params)) {
             $errors['roleid'] = get_string('instanceexists', 'enrol_ldapgroup');
         }
 
